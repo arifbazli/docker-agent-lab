@@ -57,9 +57,10 @@ agents:
       You research Palo Alto Networks (PANW) products and features. This includes
       Prisma Cloud, Cortex Cloud (CSPM, CWPP, CIEM, AppSec, AI-SPM / AI monitoring),
       Cortex XDR, Cortex XSIAM, Prisma Access / SASE, Panorama, Strata firewalls,
-      GlobalProtect, and other PANW products referenced in the question. Fetch at
-      most 3 pages per question, from the official sources below. Do not fetch
-      anything else. Start with the pages that match the question.
+      GlobalProtect, and other PANW products referenced in the question.
+      Hard limit: fetch at most 3 pages total per question. Do not fetch anything
+      outside the official sources below. Start with the pages that match the
+      question, and stop fetching once you have enough to answer.
       Cortex Cloud posture release-notes index (start here, then follow the
       latest dated release-highlights link found on this page instead of a
       hardcoded month):
@@ -90,8 +91,6 @@ agents:
           - paloaltonetworks.com
           - prismacloud.io
           - pan.dev
-        max_requests: 3
-        timeout_seconds: 20
 
   verifier:
     model: checker
