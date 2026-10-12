@@ -1,0 +1,22 @@
+agents:
+  root:
+    model: ollama/nemotron-3-super:cloud
+    description: Coordinator
+    instruction: |
+      You get a topic. First ask the writer for a 3-sentence explanation.
+      Then ask the critic to check it for mistakes.
+      Reply with the final explanation, then one line saying what the critic found.
+    sub_agents: [writer, critic]
+
+  writer:
+    model: ollama/gemma4:31b-cloud
+    description: Writes simple explanations
+    instruction: |
+      Explain the topic in 3 short sentences for a beginner.
+
+  critic:
+    model: ollama/nemotron-3-nano:30b-cloud
+    description: Checks explanations for errors
+    instruction: |
+      Review the text you are given. Say "OK" if it is accurate,
+      otherwise list the mistakes in one short line.
