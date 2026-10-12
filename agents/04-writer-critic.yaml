@@ -29,24 +29,26 @@ agents:
       - type: api
         api_config:
           name: wikipedia_search
-          description: Search Wikipedia article titles and snippets
           method: GET
-          endpoint: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${query}&srlimit=3&format=json"
-          headers:
-            User-Agent: "docker-agent-lab/1.0 (personal learning project)"
+          endpoint: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=3&format=json"
+          instruction: Search Wikipedia article titles and snippets
           args:
             query:
               type: string
               description: The search query
+          required: ["query"]
+          headers:
+            User-Agent: "docker-agent-lab/1.0 (personal learning project)"
       - type: api
         api_config:
           name: wikipedia_summary
-          description: Get the summary of a Wikipedia article by exact title (use underscores for spaces)
           method: GET
-          endpoint: "https://en.wikipedia.org/api/rest_v1/page/summary/${title}"
-          headers:
-            User-Agent: "docker-agent-lab/1.0 (personal learning project)"
+          endpoint: "https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}"
+          instruction: Get the summary of a Wikipedia article by exact title (use underscores for spaces)
           args:
             title:
               type: string
               description: Exact article title, for example OS-level_virtualization
+          required: ["title"]
+          headers:
+            User-Agent: "docker-agent-lab/1.0 (personal learning project)"
