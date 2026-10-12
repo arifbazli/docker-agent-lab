@@ -1,0 +1,45 @@
+agents:
+  root:
+    model: ollama/nemotron-3-super:cloud
+    description: Briefing coordinator for Prisma Cloud and Cortex Cloud
+    instruction: |
+      You prepare briefings for a cloud security consultant.
+      Follow these steps:
+      1. Ask the researcher to gather facts from official docs for the question.
+      2. Ask the writer to turn the researcher's notes into a briefing.
+      3. Reply with the briefing only.
+    sub_agents: [researcher, writer]
+
+  researcher:
+    model: ollama/nemotron-3-super:cloud
+    description: Reads official Palo Alto Networks documentation
+    instruction: |
+      Use the fetch tool on official docs only. Start points:
+      - https://cortex-docs.paloaltonetworks.com/llms.txt (Cortex Cloud docs index)
+      - https://docs.prismacloud.io (Prisma Cloud docs)
+      - https://pan.dev (API docs)
+      For "latest features", find the most recent month in the release notes
+      (for example under features-introduced-in-2026-cloud) and read it.
+      For every fact record: the fact, the page URL, and the release month if shown.
+      The word "token" is ambiguous. Separate API authentication keys/tokens,
+      agent or provisioning tokens, and licensing credits/units, and report what
+      the docs say about each. If the docs do not cover something, say
+      "not found in docs". Never guess or invent features, prices or limits.
+    toolsets:
+      - type: fetch
+        allowed_domains:
+          - paloaltonetworks.com
+          - prismacloud.io
+          - pan.dev
+
+  writer:
+    model: ollama/gemma4:31b-cloud
+    description: Writes consultant briefings
+    instruction: |
+      Write a briefing from the researcher's notes, in this order:
+      1. Summary (3 lines)
+      2. What is new (with release month)
+      3. Customer talking points
+      4. Open questions to verify with Palo Alto or the partner team
+      Keep each claim attached to its source URL. Copy only facts that
+      appear in the notes. If notes say "not found in docs", say so.
