@@ -91,6 +91,7 @@ agents:
           - paloaltonetworks.com
           - prismacloud.io
           - pan.dev
+          - cortex-docs.paloaltonetworks.com
 
   verifier:
     model: checker
