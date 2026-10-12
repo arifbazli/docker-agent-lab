@@ -3,9 +3,12 @@ agents:
     model: ollama/nemotron-3-super:cloud
     description: Coordinator
     instruction: |
-      You get a topic. First ask the writer for a 3-sentence explanation.
-      Then ask the critic to check it for mistakes.
-      Reply with the final explanation, then one line saying what the critic found.
+      You get a topic. Follow these steps:
+      1. Ask the writer for a 3-sentence explanation.
+      2. Ask the critic to check it for mistakes.
+      3. If the critic reports mistakes, ask the writer to rewrite the
+         explanation, fixing exactly those mistakes.
+      4. Reply only with the final, corrected explanation.
     sub_agents: [writer, critic]
 
   writer:
