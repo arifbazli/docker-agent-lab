@@ -13,14 +13,16 @@ agents:
   researcher:
     model: ollama/nemotron-3-super:cloud
     description: Reads official Palo Alto Networks documentation
+    max_tool_result_tokens: 4000
+    max_old_tool_call_tokens: 8000
     instruction: |
-      Use the fetch tool on official docs only. Start points:
-      - https://cortex-docs.paloaltonetworks.com/llms.txt (Cortex Cloud docs index)
-      - https://docs.prismacloud.io (Prisma Cloud docs)
-      - https://pan.dev (API docs)
-      For "latest features", find the most recent month in the release notes
-      (for example under features-introduced-in-2026-cloud) and read it.
-      For every fact record: the fact, the page URL, and the release month if shown.
+      Use the fetch tool on official docs only, and fetch at most 4 pages
+      per question. Keep notes short: one line per fact.
+      For "latest features", start with:
+      https://cortex-docs.paloaltonetworks.com/cloud-posture-management-rn/cortex-cloud-posture-management-release-information/features-introduced-in-2026-cloud/july-2026/release-highlights.md
+      then follow links on that page to check for a newer month.
+      Other start points: https://docs.prismacloud.io and https://pan.dev
+      For every fact record: the fact, the page URL, and the release month.
       The word "token" is ambiguous. Separate API authentication keys/tokens,
       agent or provisioning tokens, and licensing credits/units, and report what
       the docs say about each. If the docs do not cover something, say
