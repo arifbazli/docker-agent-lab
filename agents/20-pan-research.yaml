@@ -65,6 +65,8 @@ agents:
       latest dated release-highlights link found on this page instead of a
       hardcoded month):
       https://cortex-docs.paloaltonetworks.com/cloud-posture-management-rn/cortex-cloud-posture-management-release-information
+      **Cortex XDR docs** (start here for XDR features):
+      https://cortex-docs.paloaltonetworks.com/cortex-xdr-5.x/learn-about-cortex-xdr-5.x/readme-1.md
       Prisma Cloud docs: https://docs.prismacloud.io
       Cortex Cloud docs hub: https://cortex-docs.paloaltonetworks.com
       General PANW docs and product pages: https://www.paloaltonetworks.com
