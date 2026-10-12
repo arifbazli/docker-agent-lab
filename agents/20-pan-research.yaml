@@ -1,32 +1,51 @@
+models:
+  research:
+    provider: ollama
+    model: nemotron-3-super:cloud
+    base_url: http://localhost:11434/v1
+    temperature: 0.1
+  checker:
+    provider: ollama
+    model: nemotron-3-ultra:cloud
+    base_url: http://localhost:11434/v1
+    temperature: 0.1
+  writer_model:
+    provider: ollama
+    model: gemma4:31b-cloud
+    base_url: http://localhost:11434/v1
+    temperature: 0.3
+
 agents:
   root:
-    model: ollama/nemotron-3-super:cloud
+    model: research
     description: Briefing coordinator for Prisma Cloud and Cortex Cloud
     instruction: |
-      You prepare briefings for a cloud security consultant.
-      Follow these steps:
-      1. Ask the researcher to gather facts from official docs for the question.
-      2. Ask the writer to turn the researcher's notes into a briefing.
-      3. Reply with the briefing only.
-    sub_agents: [researcher, writer]
+      You coordinate a research briefing. Follow these steps exactly:
+      1. Send the question to the researcher.
+      2. Send the researcher's COMPLETE output, unchanged, to the verifier.
+      3. Send the verifier's COMPLETE output, unchanged, to the writer.
+      4. Reply with the writer's briefing only.
+    sub_agents: [researcher, verifier, writer]
 
   researcher:
-    model: ollama/nemotron-3-super:cloud
-    description: Reads official Palo Alto Networks documentation
+    model: research
+    description: Extracts facts with exact quotes from official docs
     max_tool_result_tokens: 4000
     max_old_tool_call_tokens: 8000
     instruction: |
-      Use the fetch tool on official docs only, and fetch at most 4 pages
-      per question. Keep notes short: one line per fact.
-      For "latest features", start with:
+      Fetch at most 3 pages per question, from the official sources below.
+      Do not fetch anything else. Start with the pages that match the question.
+      Cortex Cloud posture, July 2026 highlights:
       https://cortex-docs.paloaltonetworks.com/cloud-posture-management-rn/cortex-cloud-posture-management-release-information/features-introduced-in-2026-cloud/july-2026/release-highlights.md
-      then follow links on that page to check for a newer month.
-      Other start points: https://docs.prismacloud.io and https://pan.dev
-      For every fact record: the fact, the page URL, and the release month.
-      The word "token" is ambiguous. Separate API authentication keys/tokens,
-      agent or provisioning tokens, and licensing credits/units, and report what
-      the docs say about each. If the docs do not cover something, say
-      "not found in docs". Never guess or invent features, prices or limits.
+      Prisma Cloud docs: https://docs.prismacloud.io
+      API docs: https://pan.dev
+      Output one line per fact in exactly this format:
+      FACT: <one sentence> | QUOTE: "<exact words copied from the page, max 20 words>" | URL: <page url> | MONTH: <release month or unknown>
+      Rules: copy quotes exactly, never paraphrase them. If a fact has no exact
+      quote, do not output it. If the pages do not answer the question, output
+      only: NOT FOUND IN FETCHED PAGES.
+      "Token" is ambiguous: label each fact as API authentication token,
+      agent or provisioning token, or licensing credits.
     toolsets:
       - type: fetch
         allowed_domains:
@@ -34,14 +53,22 @@ agents:
           - prismacloud.io
           - pan.dev
 
-  writer:
-    model: ollama/gemma4:31b-cloud
-    description: Writes consultant briefings
+  verifier:
+    model: checker
+    description: Rejects facts that their quotes do not support
     instruction: |
-      Write a briefing from the researcher's notes, in this order:
+      You receive FACT lines. For each line, check that the QUOTE directly
+      supports the FACT and nothing is added. Output every line again with
+      a verdict at the start: SUPPORTED, PARTLY SUPPORTED (explain what is
+      extra), or UNSUPPORTED. Do not add new facts. Do not fix lines.
+
+  writer:
+    model: writer_model
+    description: Writes consultant briefings from verified facts
+    instruction: |
+      Write a briefing using ONLY lines marked SUPPORTED. Sections:
       1. Summary (3 lines)
       2. What is new (with release month)
-      3. Customer talking points
-      4. Open questions to verify with Palo Alto or the partner team
-      Keep each claim attached to its source URL. Copy only facts that
-      appear in the notes. If notes say "not found in docs", say so.
+      3. Customer talking points (attribute vendor claims with "Palo Alto states")
+      4. Items to confirm (all PARTLY SUPPORTED, UNSUPPORTED or NOT FOUND items)
+      Attach the source URL to every claim. Never add facts that are not in the lines.
