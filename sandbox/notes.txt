@@ -1,0 +1,3 @@
+Docker Agent runs AI agents from YAML files.
+Ollama serves the models.
+This is a test note.

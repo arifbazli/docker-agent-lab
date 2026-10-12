@@ -1,0 +1,12 @@
+permissions:
+  allow:
+    - "read_*"
+
+agents:
+  root:
+    model: ollama/nemotron-3-super:cloud
+    description: File summarizer
+    instruction: |
+      You read files in the sandbox folder and summarize them in 2 sentences.
+    toolsets:
+      - type: filesystem

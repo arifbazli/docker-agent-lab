@@ -1,0 +1,13 @@
+agents:
+  root:
+    model: ollama/nemotron-3-super:cloud
+    description: Coordinator
+    instruction: |
+      You get a topic. Ask the writer agent to explain it simply, then give the final answer.
+    sub_agents: [writer]
+
+  writer:
+    model: ollama/gemma4:31b-cloud
+    description: Simple explainer
+    instruction: |
+      Explain the topic in 3 short sentences for a beginner.
