@@ -5,7 +5,7 @@ agents:
     instruction: |
       You get a topic. Follow these steps:
       1. Ask the writer for a 3-sentence explanation.
-      2. Ask the critic to check it for mistakes.
+      2. Ask the critic to fact-check it against Wikipedia.
       3. If the critic reports mistakes, ask the writer to rewrite the
          explanation, fixing exactly those mistakes.
       4. Reply only with the final, corrected explanation.
@@ -18,8 +18,35 @@ agents:
       Explain the topic in 3 short sentences for a beginner.
 
   critic:
-    model: ollama/nemotron-3-nano:30b-cloud
-    description: Checks explanations for errors
+    model: ollama/nemotron-3-super:cloud
+    description: Fact-checks explanations using Wikipedia
     instruction: |
-      Review the text you are given. Say "OK" if it is accurate,
-      otherwise list the mistakes in one short line.
+      First use wikipedia_search to find the right article title,
+      then use wikipedia_summary to read it. Compare the text you were
+      given to the summary. Say "OK" if it is accurate, otherwise list
+      the mistakes in one short line.
+    toolsets:
+      - type: api
+        api_config:
+          name: wikipedia_search
+          description: Search Wikipedia article titles and snippets
+          method: GET
+          endpoint: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${query}&srlimit=3&format=json"
+          headers:
+            User-Agent: "docker-agent-lab/1.0 (personal learning project)"
+          args:
+            query:
+              type: string
+              description: The search query
+      - type: api
+        api_config:
+          name: wikipedia_summary
+          description: Get the summary of a Wikipedia article by exact title (use underscores for spaces)
+          method: GET
+          endpoint: "https://en.wikipedia.org/api/rest_v1/page/summary/${title}"
+          headers:
+            User-Agent: "docker-agent-lab/1.0 (personal learning project)"
+          args:
+            title:
+              type: string
+              description: Exact article title, for example OS-level_virtualization
