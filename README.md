@@ -1,4 +1,6 @@
-# docker-agent-lab
+# docker-agent-prisma-cortex
+
+> Independent research project. Not affiliated with or endorsed by Palo Alto Networks or Docker.
 
 Experiments with [Docker Agent](https://github.com/docker/cagent) configs running on local Ollama cloud models.
 CLI only, no Docker Desktop, small disk footprint. Developed on Debian (WSL2).
