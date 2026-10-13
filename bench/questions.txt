@@ -1,0 +1,11 @@
+# id|expect|question
+migrate-why|briefing|Why migrate from Prisma Cloud to Cortex Cloud?
+upgrade-helper|briefing|What does the Upgrade Helper copy from Prisma Cloud to Cortex Cloud and what needs manual work?
+link-tenants|briefing|How do I link a Prisma Cloud tenant to Cortex Cloud?
+release-latest|briefing|What is new in the latest Cortex Cloud Posture Management release?
+cspm-scope|briefing|What does Cortex Cloud Posture Management cover?
+ciem|briefing|What does Cortex Cloud Identity Security cover?
+ai-spm|briefing|What AI security capabilities does Cortex Cloud have?
+appsec-rules|briefing|What does Cortex Cloud Application Security scan for?
+xdr-itdr|briefing|What does Cortex XDR identity threat detection cover?
+oos-france|oos|What is the capital of France?

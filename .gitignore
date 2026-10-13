@@ -10,3 +10,10 @@
 !/.pi/teams/graphs/run.log
 *.bak
 *.bak[0-9]*
+logs/
+outputs/
+run.log
+briefing.md
+.pi/
+fetched/
+*.bak*
