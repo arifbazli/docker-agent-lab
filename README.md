@@ -29,6 +29,13 @@ The filename contains `#`. Always quote it, and URL-encode it as `%23` in web li
 - [Ollama](https://ollama.com) on `http://localhost:11434` with access to `nemotron-3-super:cloud` and `nemotron-3-ultra:cloud`
 - `bash`, `curl`, `python3` with PyYAML (`sudo apt-get install -y python3-yaml`)
 
+## Example run
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/docker-agent-run-dark.svg">
+  <img alt="Docker Agent run: Prisma Cloud to Cortex Cloud migration briefing" src="docs/images/docker-agent-run-light.svg">
+</picture>
+
 ## How it works
 
 ```
